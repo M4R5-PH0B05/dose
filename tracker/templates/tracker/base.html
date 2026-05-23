@@ -10,9 +10,18 @@
         <script>document.addEventListener('DOMContentLoaded', () => lucide.createIcons())</script>
     </head>
     <body class="min-h-screen bg-background text-foreground">
-        <header class="border-b px-6 py-4 text-lg font-semibold">Dose</header>
+        <header class="border-b px-6 py-4">
+            <div class="mx-auto max-w-5xl flex items-center">
+                <span class="text-lg font-semibold">Dose</span>
+                <div class="flex gap-2 ml-auto">
+                    {% block header_actions %}{% endblock %}
+                    <a href="{% url 'tracker:dashboard' %}" class="btn btn-sm btn-secondary">Logout</a>
+                </div>
+            </div>
+        </header>
         <main>
             {% block content %}{% endblock %}
         </main>
+        {% block dialogs %}{% endblock %}
     </body>
 </html>

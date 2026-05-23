@@ -1,5 +1,10 @@
 {% extends 'tracker/base.html' %}
 {% block title %}Dashboard{% endblock %}
+
+{% block header_actions %}
+<button type="button" onclick="document.getElementById('add-dialog').showModal()" class="btn btn-sm">Add Medication</button>
+{% endblock %}
+
 {% block content %}
 <div class="mx-auto max-w-3xl p-6 space-y-6">
     <div class="space-y-1">
@@ -57,9 +62,33 @@
                         <label class="label" for="name-{{ med.id }}">Name</label>
                         <input class="input" type="text" id="name-{{ med.id }}" name="name" value="{{ med.name }}" />
                     </div>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="grid gap-2">
+                            <label class="label" for="dosage-{{ med.id }}">Dosage</label>
+                            <input class="input" type="number" id="dosage-{{ med.id }}" name="dosage" value="{{ med.dosage }}" />
+                        </div>
+                        <div class="grid gap-2">
+                            <label class="label" for="unit-{{ med.id }}">Unit</label>
+                            <input class="input" type="text" id="unit-{{ med.id }}" name="unit" value="{{ med.unit }}" />
+                        </div>
+                    </div>
                     <div class="grid gap-2">
-                        <label class="label" for="dosage-{{ med.id }}">Dosage</label>
-                        <input class="input" type="number" id="dosage-{{ med.id }}" name="dosage" value="{{ med.dosage }}" />
+                        <label class="label" for="daily_amount-{{ med.id }}">Daily Amount</label>
+                        <input class="input" type="number" id="daily_amount-{{ med.id }}" name="daily_amount" value="{{ med.daily_amount }}" />
+                    </div>
+                    <div class="grid gap-2">
+                        <label class="label" for="total_amount-{{ med.id }}">Total Amount</label>
+                        <input class="input" type="number" id="total_amount-{{ med.id }}" name="total_amount" value="{{ med.total_amount }}" />
+                    </div>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="grid gap-2">
+                            <label class="label" for="start_date-{{ med.id }}">Start Date</label>
+                            <input class="input" type="date" id="start_date-{{ med.id }}" name="start_date" value="{{ med.start_date|date:'Y-m-d' }}" />
+                        </div>
+                        <div class="grid gap-2">
+                            <label class="label" for="expiration_date-{{ med.id }}">Expiration Date</label>
+                            <input class="input" type="date" id="expiration_date-{{ med.id }}" name="expiration_date" value="{{ med.expiration_date|date:'Y-m-d' }}" />
+                        </div>
                     </div>
                     <div class="grid gap-2">
                         <label class="label" for="notes-{{ med.id }}">Notes</label>
@@ -68,7 +97,7 @@
                 </form>
             </section>
             <footer>
-                <button class="btn btn-outline" onclick="this.closest('dialog').close()">Cancel</button>
+                <button class="btn btn-secondary" onclick="this.closest('dialog').close()">Cancel</button>
                 <button class="btn" form="edit-form-{{ med.id }}" type="submit">Save changes</button>
             </footer>
             <button type="button" aria-label="Close dialog" onclick="this.closest('dialog').close()">
@@ -78,4 +107,64 @@
     </dialog>
     {% endfor %}
 </div>
+{% endblock %}
+
+{% block dialogs %}
+<dialog id="add-dialog" class="dialog w-full sm:max-w-lg"
+        onclick="if (event.target === this) this.close()">
+    <div>
+        <header>
+            <h2>Add Medication</h2>
+            <p>Fill in the details and click save when done.</p>
+        </header>
+        <section>
+            <form id="add-form" method="POST" action="{% url 'tracker:add_med' %}" class="form grid gap-4">
+                {% csrf_token %}
+                <div class="grid gap-2">
+                    <label class="label" for="add-name">Name</label>
+                    <input class="input" type="text" id="add-name" name="name" />
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="grid gap-2">
+                        <label class="label" for="add-dosage">Dosage</label>
+                        <input class="input" type="number" id="add-dosage" name="dosage" />
+                    </div>
+                    <div class="grid gap-2">
+                        <label class="label" for="add-unit">Unit</label>
+                        <input class="input" type="text" id="add-unit" name="unit" />
+                    </div>
+                </div>
+                <div class="grid gap-2">
+                    <label class="label" for="add-daily_amount">Daily Amount</label>
+                    <input class="input" type="number" id="add-daily_amount" name="daily_amount" />
+                </div>
+                <div class="grid gap-2">
+                    <label class="label" for="add-total_amount">Total Amount</label>
+                    <input class="input" type="number" id="add-total_amount" name="total_amount" />
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="grid gap-2">
+                        <label class="label" for="add-start_date">Start Date</label>
+                        <input class="input" type="date" id="add-start_date" name="start_date" />
+                    </div>
+                    <div class="grid gap-2">
+                        <label class="label" for="add-expiration_date">Expiration Date</label>
+                        <input class="input" type="date" id="add-expiration_date" name="expiration_date" />
+                    </div>
+                </div>
+                <div class="grid gap-2">
+                    <label class="label" for="add-notes">Notes</label>
+                    <textarea class="textarea" id="add-notes" name="notes"></textarea>
+                </div>
+            </form>
+        </section>
+        <footer>
+            <button class="btn btn-secondary" onclick="this.closest('dialog').close()">Cancel</button>
+            <button class="btn" form="add-form" type="submit">Add Medication</button>
+        </footer>
+        <button type="button" aria-label="Close dialog" onclick="this.closest('dialog').close()">
+            <i data-lucide="x"></i>
+        </button>
+    </div>
+</dialog>
 {% endblock %}
