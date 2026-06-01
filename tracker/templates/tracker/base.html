@@ -14,12 +14,19 @@
             <div class="mx-auto max-w-5xl flex items-center">
                 <span class="text-lg font-semibold">Dose</span>
                 <div class="flex gap-2 ml-auto">
-                    {% block header_actions %}{% endblock %}
-                    <a href="{% url 'tracker:dashboard' %}" class="btn btn-sm btn-secondary">Logout</a>
+                    {% if request.user.is_authenticated %}
+                        {% block header_actions %}{% endblock %}
+                      <form method="post" action="{% url 'logout' %}">
+                        {% csrf_token %}
+                        <button class="btn btn-sm btn-secondary" type="submit">Log out</button>
+                      </form>
+                    {% else %}
+                      <a href="{% url 'login' %}" class="btn btn-sm btn-secondary">Log in</a>
+                    {% endif %}
                 </div>
             </div>
         </header>
-        <main>
+        <main class="py-6">
             {% block content %}{% endblock %}
         </main>
         {% block dialogs %}{% endblock %}

@@ -41,9 +41,19 @@
                     Expires {{ med.expiration_date }}
                 </kbd>
             </div>
+
         </section>
-        <footer>
+
+        <footer class="flex justify-between items-center">
             <p class="text-sm text-muted-foreground">{{ med.notes }}</p>
+            {% if med.can_mark_taken %}
+            <form method="post" action="{% url 'tracker:mark_taken' med.id %}">
+                {% csrf_token %}
+                <button type="submit" class="btn">Taken?</button>
+            </form>
+            {% else %}
+            <button type="button" class="btn" disabled>Already Taken Today.</button>
+            {% endif %}
         </footer>
     </article>
 

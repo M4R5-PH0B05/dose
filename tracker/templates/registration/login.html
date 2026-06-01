@@ -1,0 +1,90 @@
+{% extends "tracker/base.html" %}
+{% block title %}Login{% endblock %}
+{% block content %}
+<div class="mx-auto max-w-sm px-6 py-10">
+  <div class="tabs w-full">
+    <nav role="tablist" aria-orientation="horizontal" class="w-full">
+      <button type="button" role="tab" aria-controls="panel-login" aria-selected="true" tabindex="0">Login</button>
+      <button type="button" role="tab" aria-controls="panel-register" aria-selected="false" tabindex="0">Register</button>
+    </nav>
+
+    <div role="tabpanel" id="panel-login" tabindex="-1">
+      <div class="card w-full">
+        <header>
+          <h2>Login to Dose</h2>
+          <p>Enter your details below to login</p>
+        </header>
+        <section>
+          <form id="login-form" method="post" action="{% url 'login' %}" class="form grid gap-6">
+            {% csrf_token %}
+            <input type="hidden" name="next" value="{{ next }}">
+            <div class="grid gap-2">
+              <label for="id_username">Username</label>
+              <input class="input" type="text" id="id_username" name="username" autofocus>
+            </div>
+            <div class="grid gap-2">
+              <label for="id_password">Password</label>
+              <input class="input" type="password" id="id_password" name="password">
+            </div>
+            {% if form.errors %}
+            <p class="text-sm text-destructive">Invalid username or password.</p>
+            {% endif %}
+          </form>
+        </section>
+        <footer>
+          <button class="btn w-full" form="login-form" type="submit">Sign in</button>
+        </footer>
+      </div>
+    </div>
+
+    <div role="tabpanel" id="panel-register" tabindex="-1" hidden>
+      <div class="card w-full">
+        <header>
+          <h2>Create an account</h2>
+          <p>Enter your details below to register</p>
+        </header>
+        <section>
+          <form id="register-form" method="post" action="{% url 'tracker:register' %}" class="form grid gap-6">
+            {% csrf_token %}
+            <div class="grid gap-2">
+              <label for="id_reg_username">Username</label>
+              <input class="input" type="text" id="id_reg_username" name="username">
+            </div>
+            <div class="grid gap-2">
+              <label for="id_reg_password1">Password</label>
+              <input class="input" type="password" id="id_reg_password1" name="password1">
+            </div>
+            <div class="grid gap-2">
+              <label for="id_reg_password2">Confirm password</label>
+              <input class="input" type="password" id="id_reg_password2" name="password2">
+            </div>
+            {% if reg_form.errors %}
+            <p class="text-sm text-destructive">
+                {% for field in reg_form %}
+                    {% for error in field.errors %}{{ error }}{% endfor %}
+                {% endfor %}
+                {% for error in reg_form.non_field_errors %}{{ error }}{% endfor %}
+            </p>
+            {% endif %}
+          </form>
+        </section>
+        <footer>
+          <button class="btn w-full" form="register-form" type="submit">Create account</button>
+        </footer>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+{% if reg_form.errors %}
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    document.getElementById('panel-register').removeAttribute('hidden');
+    document.getElementById('panel-login').setAttribute('hidden', '');
+    document.querySelector('[aria-controls="panel-register"]').setAttribute('aria-selected', 'true');
+    document.querySelector('[aria-controls="panel-login"]').setAttribute('aria-selected', 'false');
+  });
+</script>
+{% endif %}
+{% endblock %}
